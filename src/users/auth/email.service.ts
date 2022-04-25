@@ -12,7 +12,7 @@ class EmailService {
       service: 'gmail',
       auth: {
         user: 'matej.meklav@gmail.com',
-        pass: 'aass35111',
+        pass: 'AASS35111',
       },
     });
   }

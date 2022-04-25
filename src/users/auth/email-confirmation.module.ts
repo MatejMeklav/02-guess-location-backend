@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { UsersModule } from '../users.module';
 import { EmailConfirmationService } from './email-confirmation.service';
+import { EmailConfirmationController } from './email.confirmation.controller';
 import EmailService from './email.service';
 
 @Module({
@@ -17,7 +19,9 @@ import EmailService from './email.service';
       }),
       inject: [ConfigService],
     }),
+    UsersModule,
   ],
+  controllers: [EmailConfirmationController],
   providers: [EmailConfirmationService, EmailService],
   exports: [EmailConfirmationService],
 })

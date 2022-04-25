@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../users.module';
 import { AuthService } from './auth.service';
+import { EmailConfirmationModule } from './email-confirmation.module';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 
@@ -22,6 +23,7 @@ import { LocalStrategy } from './local.strategy';
       }),
       inject: [ConfigService],
     }),
+    EmailConfirmationModule,
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],

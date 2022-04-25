@@ -33,7 +33,7 @@ export class AppController {
 
   @Post('/signup')
   async signup(@Body() createUserDto: CreateUserDto): Promise<User> {
-    const user = this.usersService.createUser(createUserDto);
+    const user = await this.usersService.createUser(createUserDto);
     const response = await this.emailConfirmationService.sendVerificationLink(
       createUserDto.email,
     );

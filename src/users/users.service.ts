@@ -8,6 +8,19 @@ import { UpdateUserDto } from './dto/update-user-dto';
 
 @Injectable()
 export class UsersService {
+  async markEmailAsConfirmed(email: string) {
+    return this.usersRepository.update(
+      { email },
+      {
+        isEmailConfirmed: true,
+      },
+    );
+  }
+  async getByEmail(email: string): Promise<User> {
+    return await this.usersRepository.findOneBy({
+      email: email,
+    });
+  }
   async findOne(email: string): Promise<User> {
     return await this.usersRepository.findOneBy({
       email: email,
