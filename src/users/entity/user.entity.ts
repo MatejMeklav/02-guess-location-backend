@@ -11,4 +11,6 @@ export class User {
   lastName: string;
   @Column()
   password: string;
+  @Column()
+  isEmailConfirmed: boolean;
 }

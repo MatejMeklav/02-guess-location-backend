@@ -1,11 +1,16 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { getConnectionOptions } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { config } from './config';
 import { DatabaseConfig } from './database.config';
+import { AuthModule } from './users/auth/auth.module';
+import { EmailConfirmationModule } from './users/auth/email-confirmation.module';
+import { EmailConfirmationService } from './users/auth/email-confirmation.service';
+import { EmailModule } from './users/auth/email.module';
+import EmailService from './users/auth/email.service';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -19,8 +24,19 @@ import { UsersModule } from './users/users.module';
       useClass: DatabaseConfig,
     }),
     UsersModule,
+    AuthModule,
+    EmailConfirmationModule,
+    EmailModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
+        signOptions: { expiresIn: '11m' },
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EmailConfirmationService, EmailService],
 })
 export class AppModule {}
