@@ -13,4 +13,9 @@ export class User {
   password: string;
   @Column()
   isEmailConfirmed: boolean;
+  @Column({
+    type: 'bytea',
+    nullable: true,
+  })
+  image: Uint8Array;
 }

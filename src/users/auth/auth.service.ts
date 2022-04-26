@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -18,6 +18,9 @@ export class AuthService {
   }
 
   async login(user: any) {
+    if ((await this.usersService.isEmailConfirmed(user.id)) === false) {
+      throw new UnauthorizedException();
+    }
     const payload = { email: user.email, id: user.id };
     return this.jwtService.sign(payload);
   }

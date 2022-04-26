@@ -4,7 +4,8 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user-dto';
 import { User } from './entity/user.entity';
 import * as bcrypt from 'bcrypt';
-import { UpdateUserDto } from './dto/update-user-dto';
+import { UpdateUserInformationDto } from './dto/update-user-information.dto';
+import { UpdateUserPasswordDto } from './dto/update-user-password-dto';
 
 @Injectable()
 export class UsersService {
@@ -67,6 +68,7 @@ export class UsersService {
       user.lastName = createUserDto.lastName;
       user.password = hash;
       user.isEmailConfirmed = false;
+      user.image = null;
       await this.usersRepository.save(user);
       user.password = null;
       return user;
@@ -75,32 +77,74 @@ export class UsersService {
     }
   }
 
-  async updateUser(
+  async updateUserInformation(
     userId: string,
-    updateUserDto: UpdateUserDto,
+    updateUserInformationDto: UpdateUserInformationDto,
   ): Promise<User> {
     const user = await this.usersRepository.findOneBy({
       id: userId,
     });
+    if (user) {
+      user.email = updateUserInformationDto.email;
+      user.firstName = updateUserInformationDto.firstName;
+      user.lastName = updateUserInformationDto.lastName;
+      await this.usersRepository.save(user);
+      user.password = null;
+      return user;
+    } else {
+      throw new BadRequestException();
+    }
+  }
+
+  async updateUserPassword(
+    userId: string,
+    updateUserPasswordDto: UpdateUserPasswordDto,
+  ) {
     if (
       this.checkPassword(
-        updateUserDto.password,
-        updateUserDto.repeatedPassword,
+        updateUserPasswordDto.password,
+        updateUserPasswordDto.repeatedPassword,
       ) === false
     ) {
       throw new BadRequestException();
     }
-    const hash = await this.hashPassword(updateUserDto.password);
-    if (user) {
-      user.email = updateUserDto.email;
-      user.firstName = updateUserDto.firstName;
-      user.lastName = updateUserDto.lastName;
+    const hash = await this.hashPassword(updateUserPasswordDto.password);
+    const user = await this.usersRepository.findOneBy({
+      id: userId,
+    });
+    if (
+      user &&
+      (await bcrypt.compare(updateUserPasswordDto.oldPassword, user.password))
+    ) {
       user.password = hash;
       await this.usersRepository.save(user);
       user.password = null;
       return user;
     } else {
       throw new BadRequestException();
+    }
+  }
+
+  async saveImage(userId: string, image: Express.Multer.File) {
+    const user = await this.usersRepository.findOneBy({
+      id: userId,
+    });
+    if (user) {
+      user.image = null;
+      user.image = image.buffer;
+      this.usersRepository.save(user);
+      return user;
+    }
+  }
+
+  async isEmailConfirmed(id: any) {
+    const user = await this.usersRepository.findOneBy({
+      id: id,
+    });
+    if (user && user.isEmailConfirmed) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

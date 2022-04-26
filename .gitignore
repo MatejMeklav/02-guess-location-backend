@@ -36,3 +36,7 @@ lerna-debug.log*
 
 # ENVIRONMENT VARIABLES
 .env
+
+#email service
+
+/src/users/auth/email.service.ts

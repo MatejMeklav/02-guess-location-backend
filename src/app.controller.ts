@@ -6,14 +6,18 @@ import {
   UseGuards,
   Request,
   Put,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import { AuthService } from './users/auth/auth.service';
 import { EmailConfirmationService } from './users/auth/email-confirmation.service';
 import { JwtAuthGuard } from './users/auth/jwt-auth.guard';
 import { LocalAuthGuard } from './users/auth/local-auth-guard';
 import { CreateUserDto } from './users/dto/create-user-dto';
-import { UpdateUserDto } from './users/dto/update-user-dto';
+import { UpdateUserInformationDto } from './users/dto/update-user-information.dto';
+import { UpdateUserPasswordDto } from './users/dto/update-user-password-dto';
 import { User } from './users/entity/user.entity';
 import { UsersService } from './users/users.service';
 
@@ -47,8 +51,36 @@ export class AppController {
     return { key: token };
   }
   @UseGuards(JwtAuthGuard)
-  @Put('/me/update-user')
-  updateProfileInfo(@Request() req, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updateUser(req.user.id, updateUserDto);
+  @Put('/me/update-user-info')
+  updateProfileInfo(
+    @Request() req,
+    @Body() updateUserInformationDto: UpdateUserInformationDto,
+  ) {
+    return this.usersService.updateUserInformation(
+      req.user.id,
+      updateUserInformationDto,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/me/update-user-password')
+  updateProfilePassword(
+    @Request() req,
+    @Body() updateUserPasswordDto: UpdateUserPasswordDto,
+  ) {
+    return this.usersService.updateUserPassword(
+      req.user.id,
+      updateUserPasswordDto,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/me/update-user-profile-image')
+  @UseInterceptors(FileInterceptor('image'))
+  async updateProfileImage(
+    @Request() req,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    return await this.usersService.saveImage(req.user.id, image);
   }
 }

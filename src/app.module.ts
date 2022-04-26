@@ -12,6 +12,7 @@ import { EmailConfirmationService } from './users/auth/email-confirmation.servic
 import { EmailModule } from './users/auth/email.module';
 import EmailService from './users/auth/email.service';
 import { UsersModule } from './users/users.module';
+import { LocationModule } from './location/location.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { UsersModule } from './users/users.module';
       }),
       inject: [ConfigService],
     }),
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailConfirmationService, EmailService],
