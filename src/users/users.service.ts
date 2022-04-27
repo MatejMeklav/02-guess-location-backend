@@ -6,9 +6,15 @@ import { User } from './entity/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserInformationDto } from './dto/update-user-information.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password-dto';
+import { Location } from 'src/location/entity/location.entity';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
+
   async markEmailAsConfirmed(email: string) {
     return this.usersRepository.update(
       { email },
@@ -22,16 +28,19 @@ export class UsersService {
       email: email,
     });
   }
-  async findOne(email: string): Promise<User> {
-    return await this.usersRepository.findOneBy({
-      email: email,
+
+  async getById(id: string): Promise<User> {
+    return await this.usersRepository.findOne({
+      where: { id: id },
+      relations: ['locations'],
     });
   }
-  constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-  ) {}
-
+  async findOne(email: string): Promise<User> {
+    return await this.usersRepository.findOne({
+      where: { email: email },
+      relations: ['locations'],
+    });
+  }
   findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }

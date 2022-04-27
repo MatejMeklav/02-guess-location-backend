@@ -13,6 +13,9 @@ import { EmailModule } from './users/auth/email.module';
 import EmailService from './users/auth/email.service';
 import { UsersModule } from './users/users.module';
 import { LocationModule } from './location/location.module';
+import { GuessController } from './guess/guess.controller';
+import { GuessService } from './guess/guess.service';
+import { GuessModule } from './guess/guess.module';
 
 @Module({
   imports: [
@@ -37,8 +40,9 @@ import { LocationModule } from './location/location.module';
       inject: [ConfigService],
     }),
     LocationModule,
+    GuessModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, GuessController],
   providers: [AppService, EmailConfirmationService, EmailService],
 })
 export class AppModule {}

@@ -11,8 +11,8 @@ class EmailService {
     this.nodemailerTransport = createTransport({
       service: 'gmail',
       auth: {
-        user: '############',
-        pass: '##########',
+        user: 'matej.meklav@gmail.com',
+        pass: 'QFGZ12QA861',
       },
     });
   }

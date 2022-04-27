@@ -81,6 +81,7 @@ export class AppController {
     @Request() req,
     @UploadedFile() image: Express.Multer.File,
   ) {
+    console.log(JSON.stringify(image));
     return await this.usersService.saveImage(req.user.id, image);
   }
 }
