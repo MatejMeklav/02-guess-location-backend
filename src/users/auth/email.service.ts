@@ -9,10 +9,10 @@ class EmailService {
 
   constructor(private readonly configService: ConfigService) {
     this.nodemailerTransport = createTransport({
-      service: 'gmail',
+      service: configService.get<string>('EMAIL_SERVICE'),
       auth: {
-        user: 'matej.meklav@gmail.com',
-        pass: 'QFGZ12QA861',
+        user: configService.get<string>('EMAIL_USER'),
+        pass: configService.get<string>('EMAIL_PASSWORD'),
       },
     });
   }

@@ -23,9 +23,7 @@ export class EmailConfirmationService {
       )}s`,
     });
 
-    const url = `${this.configService.get(
-      'EMAIL_CONFIRMATION_URL',
-    )}?token=${token}`;
+    const url = `${this.configService.get('EMAIL_CONFIRMATION_URL')}${token}`;
 
     const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
 

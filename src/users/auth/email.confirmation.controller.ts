@@ -12,6 +12,6 @@ export class EmailConfirmationController {
     const email = await this.emailConfirmationService.decodeConfirmationToken(
       params.token,
     );
-    await this.emailConfirmationService.confirmEmail(email);
+    return await this.emailConfirmationService.confirmEmail(email);
   }
 }

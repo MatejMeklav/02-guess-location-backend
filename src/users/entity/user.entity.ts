@@ -22,11 +22,8 @@ export class User {
   password: string;
   @Column()
   isEmailConfirmed: boolean;
-  @Column({
-    type: 'bytea',
-    nullable: true,
-  })
-  image: Uint8Array;
+  @Column({ nullable: true })
+  image: string;
 
   @OneToMany(() => Location, (location) => location.user)
   locations: Location[];

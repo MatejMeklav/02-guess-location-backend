@@ -12,10 +12,4 @@ export class UpdateUserInformationDto {
   @MaxLength(15)
   @IsAlpha()
   lastName: string;
-  @IsNotEmpty()
-  @MaxLength(20)
-  password: string;
-  @IsNotEmpty()
-  @MaxLength(20)
-  repeatedPassword: string;
 }

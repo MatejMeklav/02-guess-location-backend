@@ -5,9 +5,11 @@ import { Location } from './entity/location.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from 'src/users/users.module';
 import { User } from 'src/users/entity/user.entity';
+import { Guess } from 'src/guess/entity/guess.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Guess]),
     TypeOrmModule.forFeature([Location]),
     TypeOrmModule.forFeature([User]),
     UsersModule,

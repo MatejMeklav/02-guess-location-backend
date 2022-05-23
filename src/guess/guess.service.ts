@@ -24,23 +24,21 @@ export class GuessService {
 
   async createGuess(userId: string, createGuessDto: CreateGuessDto) {
     const guess = new Guess();
-    const user = await this.userService.getById(userId);
+    const user = await this.userService.getByIdNoRelations(userId);
     guess.latitude = createGuessDto.latitude;
     guess.longtitude = createGuessDto.longtitude;
     guess.meters = createGuessDto.meters;
     guess.user = user;
     guess.userId = userId;
     guess.locationId = createGuessDto.locationId;
+    guess.date_time_with_timezone = new Date();
     const location = await this.locationService.getLocationById(
       createGuessDto.locationId,
     );
-    if (location.guesses === undefined) {
-      location.guesses = new Array<Guess>();
-      location.guesses.push(guess);
-    } else {
-      location.guesses.push(guess);
-    }
+    console.log(createGuessDto.locationId);
+    console.log(location);
     await this.guessesRepository.save(guess);
+    console.log(guess);
     return await this.locationService.saveLocation(location);
   }
 
@@ -57,6 +55,7 @@ export class GuessService {
       guess.latitude = updateGuessDto.latitude;
       guess.longtitude = updateGuessDto.longtitude;
       guess.meters = updateGuessDto.meters;
+      guess.date_time_with_timezone = new Date();
       return await this.guessesRepository.save(guess);
     } else {
       throw new BadRequestException();
@@ -67,6 +66,14 @@ export class GuessService {
     return await this.guessesRepository.find({
       where: { userId: idUser },
       relations: ['location'],
+    });
+  }
+
+  async getGuessesByLocationId(idLocation: string) {
+    return await this.guessesRepository.find({
+      where: { locationId: idLocation },
+      relations: ['user'],
+      order: { meters: 'ASC' },
     });
   }
 }

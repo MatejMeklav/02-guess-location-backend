@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   Request,
@@ -22,13 +23,10 @@ export class LocationController {
   constructor(private readonly locationService: LocationService) {}
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  @UseInterceptors(FileInterceptor('image'))
   async createLocation(
     @Request() req,
-    @UploadedFile() image: Express.Multer.File,
     @Body() createLocationDto: CreateLocationDto,
   ) {
-    //createLocationDto.image = image.buffer;
     return await this.locationService.createLocation(
       req.userId,
       createLocationDto,
@@ -36,21 +34,18 @@ export class LocationController {
   }
   @UseGuards(JwtAuthGuard)
   @Put('update-image')
-  @UseInterceptors(FileInterceptor('image'))
   async updateLocationImage(
     @Request() req,
-    @UploadedFile() image: Express.Multer.File,
     @Body() editLocationDto: EditLocationDto,
   ) {
-    return await this.locationService.editLocation(editLocationDto, image);
+    return await this.locationService.editLocation(editLocationDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('delete-location')
-  async deleteLocation(
-    @Request() req,
-    @Body() deleteLocationDto: DeleteLocationDto,
-  ) {
+  async deleteLocation(@Request() req, @Body() data: { locationId: string }) {
+    const deleteLocationDto: DeleteLocationDto = { id: data.locationId };
+    console.log(data.locationId);
     return this.locationService.deleteLocation(req.user.id, deleteLocationDto);
   }
 
@@ -64,5 +59,11 @@ export class LocationController {
   @Get('all-locations')
   async getAllLocations(@Request() req) {
     return await this.locationService.allLocations();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('location-id/:id')
+  async getLocation(@Request() req, @Param() params) {
+    return await this.locationService.getLocationById(params.id);
   }
 }

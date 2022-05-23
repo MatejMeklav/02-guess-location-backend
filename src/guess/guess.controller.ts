@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
   Request,
@@ -32,5 +33,11 @@ export class GuessController {
   @Get('all')
   async getGuessesOfUser(@Request() req) {
     return await this.guessService.getGuessesByUserId(req.user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('all-guesses/:id')
+  async getGuessesOfLocation(@Request() req, @Param() params) {
+    return await this.guessService.getGuessesByLocationId(params.id);
   }
 }

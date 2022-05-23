@@ -16,6 +16,7 @@ import { EmailConfirmationService } from './users/auth/email-confirmation.servic
 import { JwtAuthGuard } from './users/auth/jwt-auth.guard';
 import { LocalAuthGuard } from './users/auth/local-auth-guard';
 import { CreateUserDto } from './users/dto/create-user-dto';
+import { UpdateUserImageDto } from './users/dto/update-user-image-dto';
 import { UpdateUserInformationDto } from './users/dto/update-user-information.dto';
 import { UpdateUserPasswordDto } from './users/dto/update-user-password-dto';
 import { User } from './users/entity/user.entity';
@@ -47,7 +48,8 @@ export class AppController {
   @UseGuards(LocalAuthGuard)
   @Post('/signin')
   async signin(@Request() req) {
-    const token = await Promise.resolve(this.authService.login(req.user));
+    const user = await this.usersService.getById(req.user.id);
+    const token = await Promise.resolve(this.authService.login(user));
     return { key: token };
   }
   @UseGuards(JwtAuthGuard)
@@ -60,6 +62,12 @@ export class AppController {
       req.user.id,
       updateUserInformationDto,
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('secure-url')
+  async getSecureUrl() {
+    return await this.appService.getSecureUrl();
   }
 
   @UseGuards(JwtAuthGuard)
@@ -76,12 +84,13 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Put('/me/update-user-profile-image')
-  @UseInterceptors(FileInterceptor('image'))
   async updateProfileImage(
     @Request() req,
-    @UploadedFile() image: Express.Multer.File,
+    @Body() updateUserImageDto: UpdateUserImageDto,
   ) {
-    console.log(JSON.stringify(image));
-    return await this.usersService.saveImage(req.user.id, image);
+    return await this.usersService.saveImage(
+      req.user.id,
+      updateUserImageDto.image,
+    );
   }
 }

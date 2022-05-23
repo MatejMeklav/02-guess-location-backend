@@ -1,20 +1,14 @@
 import { Location } from 'src/location/entity/location.entity';
 import { User } from 'src/users/entity/user.entity';
-import {
-  Column,
-  Entity,
-  ManyToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Guess {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-  @Column()
+  @Column({ type: 'decimal' })
   latitude: number;
-  @Column()
+  @Column({ type: 'decimal' })
   longtitude: number;
   @Column()
   meters: number;
@@ -29,4 +23,7 @@ export class Guess {
 
   @Column({ type: 'string', nullable: true })
   locationId?: string | null;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  date_time_with_timezone: Date;
 }

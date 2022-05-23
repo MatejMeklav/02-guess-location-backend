@@ -7,10 +7,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entity/user.entity';
 import { DeleteLocationDto } from './dto/delete-location-dto';
+import { Guess } from 'src/guess/entity/guess.entity';
 
 @Injectable()
 export class LocationService {
   constructor(
+    @InjectRepository(Guess)
+    private guessesRepository: Repository<Guess>,
     private readonly usersService: UsersService,
     @InjectRepository(Location)
     private locationRepository: Repository<Location>,
@@ -26,6 +29,7 @@ export class LocationService {
     location.userId = userId;
     location.date_time_with_timezone = new Date();
     const user = await this.usersService.getById(userId);
+    console.log(user);
     await this.locationRepository.save(location);
     if (user.locations === undefined) {
       user.locations = new Array<Location>();
@@ -36,15 +40,12 @@ export class LocationService {
     return await this.usersRepository.save(user);
   }
 
-  async editLocation(
-    editLocationDto: EditLocationDto,
-    image: Express.Multer.File,
-  ) {
+  async editLocation(editLocationDto: EditLocationDto) {
     const location = await this.locationRepository.findOneBy({
       id: editLocationDto.id,
     });
 
-    location.image = image.buffer;
+    location.image = editLocationDto.image;
     this.locationRepository.save(location);
     return location;
   }
@@ -52,6 +53,10 @@ export class LocationService {
     const user = await this.usersRepository.findOne({
       where: { id: userId },
       relations: ['locations'],
+    });
+
+    await this.guessesRepository.delete({
+      locationId: deleteLocationDto.id,
     });
     const location = await this.locationRepository.findOneBy({
       id: deleteLocationDto.id,
@@ -69,12 +74,15 @@ export class LocationService {
   }
 
   async getLocationById(locationId: string) {
-    return await this.locationRepository.findOneBy({
-      id: locationId,
+    return await this.locationRepository.findOne({
+      where: {
+        id: locationId,
+      },
     });
   }
 
   async saveLocation(location: Location) {
+    console.log(location);
     return await this.locationRepository.save(location);
   }
 

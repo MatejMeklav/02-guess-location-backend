@@ -30,10 +30,18 @@ export class UsersService {
   }
 
   async getById(id: string): Promise<User> {
-    return await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: { id: id },
       relations: ['locations'],
     });
+    return user;
+  }
+
+  async getByIdNoRelations(id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { id: id },
+    });
+    return user;
   }
   async findOne(email: string): Promise<User> {
     return await this.usersRepository.findOne({
@@ -134,13 +142,13 @@ export class UsersService {
     }
   }
 
-  async saveImage(userId: string, image: Express.Multer.File) {
+  async saveImage(userId: string, image: string) {
     const user = await this.usersRepository.findOneBy({
       id: userId,
     });
     if (user) {
       user.image = null;
-      user.image = image.buffer;
+      user.image = image;
       this.usersRepository.save(user);
       return user;
     }

@@ -13,11 +13,8 @@ import {
 export class Location {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-  @Column({
-    type: 'bytea',
-    nullable: true,
-  })
-  image: Uint8Array;
+  @Column()
+  image: string;
   @Column()
   latitude: number;
   @Column()
