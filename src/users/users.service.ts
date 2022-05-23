@@ -6,13 +6,15 @@ import { User } from './entity/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserInformationDto } from './dto/update-user-information.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password-dto';
-import { Location } from 'src/location/entity/location.entity';
-
+import { ConfigService } from '@nestjs/config';
+import { S3 } from 'aws-sdk';
+import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private configService: ConfigService,
   ) {}
 
   async markEmailAsConfirmed(email: string) {
@@ -163,5 +165,23 @@ export class UsersService {
     } else {
       return false;
     }
+  }
+
+  async getSecureUrl() {
+    const s3 = new S3({
+      region: this.configService.get<string>('AWS_REGION'),
+      accessKeyId: this.configService.get<string>('AWS_ACCESS_ID'),
+      secretAccessKey: this.configService.get<string>('AWS_ACCESS_KEY'),
+      signatureVersion: 'v4',
+    });
+    const imageName = uuidv4();
+    const params = {
+      Bucket: '02-geotagger',
+      Key: imageName,
+      Expires: 60,
+    };
+
+    const uploadUrl = await s3.getSignedUrlPromise('putObject', params);
+    return uploadUrl;
   }
 }

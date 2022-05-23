@@ -27,8 +27,9 @@ export class LocationController {
     @Request() req,
     @Body() createLocationDto: CreateLocationDto,
   ) {
+    console.log(req);
     return await this.locationService.createLocation(
-      req.userId,
+      req.user.id,
       createLocationDto,
     );
   }

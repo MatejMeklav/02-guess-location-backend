@@ -67,7 +67,7 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @Get('secure-url')
   async getSecureUrl() {
-    return await this.appService.getSecureUrl();
+    return await this.usersService.getSecureUrl();
   }
 
   @UseGuards(JwtAuthGuard)
