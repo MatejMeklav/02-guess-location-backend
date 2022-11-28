@@ -7,16 +7,13 @@ import {
   Post,
   Put,
   Request,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from 'src/users/auth/jwt-auth.guard';
-import { CreateLocationDto } from './dto/create-location-dto';
+import { JwtAuthGuard } from '../users/auth/jwt-auth.guard';
+import { CreateLocationDto } from '../location/dto/create-location-dto';
 import { DeleteLocationDto } from './dto/delete-location-dto';
-import { EditLocationDto } from './dto/edit-location-dto';
-import { LocationService } from './location.service';
+import { EditLocationDto } from '../location/dto/edit-location-dto';
+import { LocationService } from '../location/location.service';
 
 @Controller('location')
 export class LocationController {

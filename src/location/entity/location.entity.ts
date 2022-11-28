@@ -1,5 +1,5 @@
-import { Guess } from 'src/guess/entity/guess.entity';
-import { User } from 'src/users/entity/user.entity';
+import { Guess } from '../../guess/entity/guess.entity';
+import { User } from '../../users/entity/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

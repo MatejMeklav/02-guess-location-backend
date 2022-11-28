@@ -3,9 +3,9 @@ import { LocationService } from './location.service';
 import { LocationController } from './location.controller';
 import { Location } from './entity/location.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from 'src/users/users.module';
-import { User } from 'src/users/entity/user.entity';
-import { Guess } from 'src/guess/entity/guess.entity';
+import { UsersModule } from '../users/users.module';
+import { User } from '../users/entity/user.entity';
+import { Guess } from '../guess/entity/guess.entity';
 
 @Module({
   imports: [

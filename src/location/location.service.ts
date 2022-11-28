@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-import { CreateLocationDto } from './dto/create-location-dto';
-import { EditLocationDto } from './dto/edit-location-dto';
-import { Location } from './entity/location.entity';
+import { UsersService } from '../users/users.service';
+import { CreateLocationDto } from '../location/dto/create-location-dto';
+import { EditLocationDto } from '../location/dto/edit-location-dto';
+import { Location } from '../location/entity/location.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from 'src/users/entity/user.entity';
-import { DeleteLocationDto } from './dto/delete-location-dto';
-import { Guess } from 'src/guess/entity/guess.entity';
+import { User } from '../users/entity/user.entity';
+import { DeleteLocationDto } from '../location/dto/delete-location-dto';
+import { Guess } from '../guess/entity/guess.entity';
 
 @Injectable()
 export class LocationService {

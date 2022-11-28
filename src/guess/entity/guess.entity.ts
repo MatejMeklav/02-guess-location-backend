@@ -1,5 +1,5 @@
-import { Location } from 'src/location/entity/location.entity';
-import { User } from 'src/users/entity/user.entity';
+import { Location } from '../../location/entity/location.entity';
+import { User } from '../../users/entity/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

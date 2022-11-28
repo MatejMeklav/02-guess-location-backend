@@ -14,7 +14,6 @@ import EmailService from './users/auth/email.service';
 import { UsersModule } from './users/users.module';
 import { LocationModule } from './location/location.module';
 import { GuessController } from './guess/guess.controller';
-import { GuessService } from './guess/guess.service';
 import { GuessModule } from './guess/guess.module';
 
 @Module({

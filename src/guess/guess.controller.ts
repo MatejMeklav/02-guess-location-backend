@@ -8,7 +8,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/users/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../users/auth/jwt-auth.guard';
 import { CreateGuessDto } from './dto/create-guess-dto';
 import { UpdateGuessDto } from './dto/update-guess.dto';
 import { GuessService } from './guess.service';

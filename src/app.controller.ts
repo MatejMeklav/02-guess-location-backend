@@ -6,10 +6,8 @@ import {
   UseGuards,
   Request,
   Put,
-  UseInterceptors,
-  UploadedFile,
+  Param,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import { AuthService } from './users/auth/auth.service';
 import { EmailConfirmationService } from './users/auth/email-confirmation.service';
@@ -32,8 +30,8 @@ export class AppController {
   ) {}
 
   @Get()
-  async getHello(): Promise<User[]> {
-    return await this.usersService.findAll();
+  async getHello(): Promise<any> {
+    return 'Hello World!';
   }
 
   @Post('/signup')
@@ -49,6 +47,13 @@ export class AppController {
   @Post('/signin')
   async signin(@Request() req) {
     const user = await this.usersService.getById(req.user.id);
+    const token = await Promise.resolve(this.authService.login(user));
+    return { key: token };
+  }
+  //make authentication
+  @Post('/signin-face-recognition/:id')
+  async signinFaceRecognition(@Param() params) {
+    const user = await this.usersService.getById(params.id);
     const token = await Promise.resolve(this.authService.login(user));
     return { key: token };
   }

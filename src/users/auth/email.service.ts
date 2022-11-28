@@ -9,11 +9,14 @@ class EmailService {
 
   constructor(private readonly configService: ConfigService) {
     this.nodemailerTransport = createTransport({
-      service: configService.get<string>('EMAIL_SERVICE'),
+      host: this.configService.get('EMAIL_SERVICE'),
+      port: this.configService.get('EMAIL_PORT'),
+      secure: true,
       auth: {
-        user: configService.get<string>('EMAIL_USER'),
-        pass: configService.get<string>('EMAIL_PASSWORD'),
+        user: this.configService.get('EMAIL_USER'),
+        pass: this.configService.get('EMAIL_PASSWORD'),
       },
+      tls: { rejectUnauthorized: false },
     });
   }
 

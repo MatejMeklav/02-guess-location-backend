@@ -26,16 +26,17 @@ export class EmailConfirmationService {
     const url = `${this.configService.get('EMAIL_CONFIRMATION_URL')}${token}`;
 
     const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
-
-    return this.emailService.sendMail({
+    const vertificationResponse = this.emailService.sendMail({
       to: email,
       subject: 'Email confirmation',
       text,
     });
+    return vertificationResponse;
   }
 
   public async confirmEmail(email: string) {
     const user = await this.usersService.getByEmail(email);
+    console.log('dddd');
     if (user.isEmailConfirmed) {
       throw new BadRequestException('Email already confirmed');
     }

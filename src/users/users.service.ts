@@ -26,9 +26,10 @@ export class UsersService {
     );
   }
   async getByEmail(email: string): Promise<User> {
-    return await this.usersRepository.findOneBy({
+    const user = await this.usersRepository.findOneBy({
       email: email,
     });
+    return user;
   }
 
   async getById(id: string): Promise<User> {
@@ -36,6 +37,7 @@ export class UsersService {
       where: { id: id },
       relations: ['locations'],
     });
+    console.log(user);
     return user;
   }
 
@@ -46,10 +48,11 @@ export class UsersService {
     return user;
   }
   async findOne(email: string): Promise<User> {
-    return await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: { email: email },
       relations: ['locations'],
     });
+    return user;
   }
   findAll(): Promise<User[]> {
     return this.usersRepository.find();
